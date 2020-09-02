@@ -1,0 +1,42 @@
+#!/bin/bash
+
+context=$1
+contextfolder=$HOME/.docker
+
+if [[ -z "$context" ]]; then
+    currentcontext=$(readlink $contextfolder/config.json)
+
+    if [[ -z "$currentcontext" ]]; then
+        currentcontext=""
+    else
+        currentcontext=${currentcontext:0:-5}
+    fi
+
+    echo "Available contexts:"
+    echo
+
+    for file in $contextfolder/*.json; do
+        name=${file//$contextfolder/}
+        name=${name:1}
+        name=${name:0:-5}
+
+        if [[ $name == "config" ]]; then
+            continue
+        fi
+
+        if [[ $name == $currentcontext ]]; then
+            echo -n "* "
+        else
+            echo -n "  "
+        fi
+
+        echo $name
+    done
+
+    exit 0
+fi
+
+rm -f $contextfolder/config.json
+ln -s $contextfolder/$context.json $contextfolder/config.json
+
+echo "Docker auth context changed to $context"
