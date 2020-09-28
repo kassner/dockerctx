@@ -9,6 +9,7 @@ if [[ -z "$context" ]]; then
     if [[ -z "$currentcontext" ]]; then
         currentcontext=""
     else
+        currentcontext=$(basename $currentcontext)
         currentcontext=${currentcontext:0:-5}
     fi
 
